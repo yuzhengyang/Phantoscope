@@ -44,9 +44,15 @@ namespace Phantoscope.Views
             LbMotto.Font = new Font(R.FontStyle.Motto, R.FontSize.Motto);
             LbTitle.ForeColor = ColorTranslator.FromHtml(R.Color.TitleText);
             LbTitle.Font = new Font(R.FontStyle.Title, R.FontSize.Title);
-            PbLogo.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Logo.jpg");
-            PbPhoto.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Photo.jpg");
-            BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Background.jpg");
+
+            if (File.Exists(R.AppPath + @"\Images\Logo.jpg"))
+                PbLogo.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Logo.jpg");
+
+            if (File.Exists(R.AppPath + @"\Images\Photo.jpg"))
+                PbPhoto.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Photo.jpg");
+
+            if (File.Exists(R.AppPath + @"\Images\Background.jpg"))
+                BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Background.jpg");
 
             using (GraphicsPath gp = new GraphicsPath())
             {
