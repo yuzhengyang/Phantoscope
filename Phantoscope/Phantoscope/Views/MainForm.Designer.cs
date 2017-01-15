@@ -42,7 +42,7 @@
             // 
             // TmRolling
             // 
-            this.TmRolling.Interval = 10;
+            this.TmRolling.Interval = 1;
             this.TmRolling.Tick += new System.EventHandler(this.TmRolling_Tick);
             // 
             // FpMain
@@ -78,14 +78,17 @@
             this.PbPhoto.Size = new System.Drawing.Size(350, 350);
             this.PbPhoto.TabIndex = 1;
             this.PbPhoto.TabStop = false;
+            this.PbPhoto.DoubleClick += new System.EventHandler(this.PbPhoto_DoubleClick);
             // 
             // LbMotto
             // 
             this.LbMotto.BackColor = System.Drawing.Color.Transparent;
-            this.LbMotto.Location = new System.Drawing.Point(598, 170);
+            this.LbMotto.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LbMotto.Location = new System.Drawing.Point(696, 177);
             this.LbMotto.Name = "LbMotto";
             this.LbMotto.Size = new System.Drawing.Size(265, 368);
             this.LbMotto.TabIndex = 2;
+            this.LbMotto.Text = "~~~~~~";
             // 
             // LbTitle
             // 

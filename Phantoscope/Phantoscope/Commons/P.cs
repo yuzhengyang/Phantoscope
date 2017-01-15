@@ -24,6 +24,8 @@ namespace Phantoscope.Commons
             R.FormSize.MainFormWidth = IniTool.GetIntValue(R.Files.SettingsFile, "FormSize", "MainFormWidth", R.FormSize.MainFormWidth);
             R.FormSize.MainFormHeight = IniTool.GetIntValue(R.Files.SettingsFile, "FormSize", "MainFormHeight", R.FormSize.MainFormHeight);
 
+            R.Interval.Rolling = IniTool.GetIntValue(R.Files.SettingsFile, "Interval", "Rolling", R.Interval.Rolling);
+
             P.Create();
         }
         public static void Create()
@@ -42,6 +44,8 @@ namespace Phantoscope.Commons
 
             IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormWidth", R.FormSize.MainFormWidth.ToString());
             IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormHeight", R.FormSize.MainFormHeight.ToString());
+
+            IniTool.WriteValue(R.Files.SettingsFile, "Interval", "Rolling", R.Interval.Rolling.ToString());
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Phantoscope.Views
         int Index = 0;
         Dictionary<string, Image> PhotosCache = new Dictionary<string, Image>();
         Dictionary<string, string> MottosCache = new Dictionary<string, string>();
+        string Cmd = "";
         public MainForm()
         {
             SetStyle(ControlStyles.UserPaint, true);
@@ -35,6 +36,9 @@ namespace Phantoscope.Views
 
             Height = R.FormSize.MainFormHeight;
             Width = R.FormSize.MainFormWidth;
+            Left = (Screen.PrimaryScreen.WorkingArea.Width - Width) / 2;
+            Top = (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2;
+            TmRolling.Interval = R.Interval.Rolling;
 
             Photos = FileTool.GetFile(R.Paths.Box, "*.jpg");
             Text = R.Strings.FormName + "      developer：inc@live.cn";
@@ -54,14 +58,14 @@ namespace Phantoscope.Views
             if (File.Exists(R.AppPath + @"\Images\Background.jpg"))
                 BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Background.jpg");
 
-            using (GraphicsPath gp = new GraphicsPath())
-            {
-                gp.AddEllipse(PbPhoto.ClientRectangle);
-                using (Region region = new Region(gp))
-                {
-                    PbPhoto.Region = region;
-                }
-            }
+            //using (GraphicsPath gp = new GraphicsPath())
+            //{
+            //    gp.AddEllipse(PbPhoto.ClientRectangle);
+            //    using (Region region = new Region(gp))
+            //    {
+            //        PbPhoto.Region = region;
+            //    }
+            //}
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -79,6 +83,11 @@ namespace Phantoscope.Views
                         TmRolling.Enabled = true;
                     }
                 }
+                else if (e.KeyCode == Keys.J || e.KeyCode == Keys.I || e.KeyCode == Keys.N || e.KeyCode == Keys.G || e.KeyCode == Keys.P)
+                {
+                    Cmd += e.KeyCode;
+                    DoCmd();
+                }
             }
             else
             {
@@ -87,7 +96,7 @@ namespace Phantoscope.Views
         }
         private void TmRolling_Tick(object sender, EventArgs e)
         {
-            if (Index < Photos.Count)
+            if (Index++ < Photos.Count-1)
             {
                 PbPhoto.BackgroundImage = GetPhoto(Photos[Index]);
                 string mottoFile = Photos[Index].Replace(".jpg", ".txt");
@@ -100,11 +109,10 @@ namespace Phantoscope.Views
                 {
                     LbMotto.Text = "";
                 }
-                Index++;
             }
             else
             {
-                Index = 0;
+                Index = -1;
             }
         }
 
@@ -129,6 +137,25 @@ namespace Phantoscope.Views
         {
             IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormWidth", Width.ToString());
             IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormHeight", Height.ToString());
+        }
+        private void PbPhoto_DoubleClick(object sender, EventArgs e)
+        {
+            if (Index > 0 && Index < Photos.Count)
+            {
+                Photos.RemoveAt(Index);
+                LbMotto.Text = "";
+                if (File.Exists(R.AppPath + @"\Images\Photo.jpg"))
+                    PbPhoto.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Photo.jpg");
+            }
+        }
+
+        private void DoCmd()
+        {
+            if (Cmd == "JINGPING")
+            {
+                Photos = FileTool.GetFile(R.Paths.Box, "*.jpg");
+                Cmd = "";
+            }
         }
     }
 }

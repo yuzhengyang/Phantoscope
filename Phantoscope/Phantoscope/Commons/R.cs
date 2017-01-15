@@ -10,6 +10,10 @@ namespace Phantoscope.Commons
         public static bool Release = false;
         public static string Name = Environment.MachineName;
         public static string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+        public static class Interval
+        {
+            public static int Rolling = 1;
+        }
         public static class Strings
         {
             public static string FormName = "";
