@@ -56,7 +56,7 @@
             this.FpMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FpMain.Location = new System.Drawing.Point(0, 0);
             this.FpMain.Name = "FpMain";
-            this.FpMain.Size = new System.Drawing.Size(1284, 661);
+            this.FpMain.Size = new System.Drawing.Size(984, 561);
             this.FpMain.TabIndex = 3;
             // 
             // PbLogo
@@ -73,7 +73,7 @@
             // 
             this.PbPhoto.BackColor = System.Drawing.Color.Transparent;
             this.PbPhoto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PbPhoto.Location = new System.Drawing.Point(46, 195);
+            this.PbPhoto.Location = new System.Drawing.Point(52, 172);
             this.PbPhoto.Name = "PbPhoto";
             this.PbPhoto.Size = new System.Drawing.Size(350, 350);
             this.PbPhoto.TabIndex = 1;
@@ -84,7 +84,7 @@
             // 
             this.LbMotto.BackColor = System.Drawing.Color.Transparent;
             this.LbMotto.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LbMotto.Location = new System.Drawing.Point(696, 177);
+            this.LbMotto.Location = new System.Drawing.Point(562, 163);
             this.LbMotto.Name = "LbMotto";
             this.LbMotto.Size = new System.Drawing.Size(265, 368);
             this.LbMotto.TabIndex = 2;
@@ -105,7 +105,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1284, 661);
+            this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.FpMain);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

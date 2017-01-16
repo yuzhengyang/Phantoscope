@@ -29,6 +29,8 @@ namespace Phantoscope.Commons
         public static class Paths
         {
             public static string Box = AppPath + @"\Box";
+            public static string Cache = AppPath + @"\Cache";
+            public static string BoxThumbnail = Cache + @"\BoxThumbnail\";
             public static string DataPath;//应用数据目录
             public static string SettingsPath;//应用配置信息目录
         }
