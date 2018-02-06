@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Y.Utils.Net20.TxtUtils;
+using Y.Utils.IOUtils.TxtUtils;
 
 namespace Phantoscope.Commons
 {
@@ -9,7 +9,7 @@ namespace Phantoscope.Commons
     {
         public static void Init()
         {
-            R.Strings.FormName = IniTool.GetStringValue(R.Files.SettingsFile, "Strings", "FormName", R.Strings.FormName);
+            R.Strings.FormName =  IniTool.GetStringValue(R.Files.SettingsFile, "Strings", "FormName", R.Strings.FormName);
             R.Strings.Title = IniTool.GetStringValue(R.Files.SettingsFile, "Strings", "Title", R.Strings.Title);
 
             R.Color.TitleText = IniTool.GetStringValue(R.Files.SettingsFile, "Color", "TitleText", R.Color.TitleText);

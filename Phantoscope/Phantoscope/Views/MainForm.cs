@@ -8,10 +8,11 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Y.Utils.Net20.FileUtils;
-using Y.Utils.Net20.ImageUtils;
-using Y.Utils.Net20.ListUtils;
-using Y.Utils.Net20.TxtUtils;
+using Y.Utils.DataUtils.Collections;
+using Y.Utils.IOUtils.FileUtils;
+using Y.Utils.IOUtils.ImageUtils;
+using Y.Utils.IOUtils.PathUtils;
+using Y.Utils.IOUtils.TxtUtils;
 
 namespace Phantoscope.Views
 {
@@ -34,7 +35,7 @@ namespace Phantoscope.Views
         private void MainForm_Load(object sender, EventArgs e)
         {
             P.Init();
-            FpMain.InitMouseAndContolStyle(R.Files.Layout);
+            //FpMain.InitMouseAndContolStyle(R.Files.Layout);
 
             Height = R.FormSize.MainFormHeight;
             Width = R.FormSize.MainFormWidth;
@@ -132,7 +133,8 @@ namespace Phantoscope.Views
                 Cmd = "";
             }
         }
-        private void ChangePhoto() {
+        private void ChangePhoto()
+        {
             CanRemove = true;
             PbPhoto.BackgroundImage = GetPhoto(Photos[Index]);
             string mottoFile = Photos[Index].ToLower().Replace(".jpg", ".txt");
@@ -176,7 +178,7 @@ namespace Phantoscope.Views
         {
             if (!MottosCache.ContainsKey(key))
             {
-                MottosCache.Add(key, TxtTool.Read(key, Encoding.Default));
+                MottosCache.Add(key, TxtTool.Read(key));
             }
             return MottosCache[key];
         }
@@ -185,7 +187,7 @@ namespace Phantoscope.Views
             DirTool.Create(R.Paths.BoxThumbnail);
             Photos?.ForEach(x =>
             {
-                bool flag = ImageTool.MakeThumbnail(x, R.Paths.BoxThumbnail + Path.GetFileName(x), 1000, 1000, "W");
+                bool flag = ImageHelper.MakeThumbnail(x, R.Paths.BoxThumbnail + Path.GetFileName(x), 1000, 1000, "W");
                 if (flag)
                 {
                     PhotosCache.Add(x, Image.FromFile(R.Paths.BoxThumbnail + Path.GetFileName(x)));

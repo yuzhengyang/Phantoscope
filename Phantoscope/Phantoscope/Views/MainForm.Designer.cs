@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.TmRolling = new System.Windows.Forms.Timer(this.components);
-            this.FpMain = new Y.Controls.Container.FlexiblePanel();
+            this.FpMain = new Y.Skin.YoPanel.FlexiblePanel();
             this.PbLogo = new System.Windows.Forms.PictureBox();
             this.PbPhoto = new System.Windows.Forms.PictureBox();
             this.LbMotto = new System.Windows.Forms.Label();
@@ -47,7 +47,7 @@
             // 
             // FpMain
             // 
-            this.FpMain.AutoScaleMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
+            //this.FpMain.AutoScaleMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.FpMain.BackColor = System.Drawing.Color.Transparent;
             this.FpMain.Controls.Add(this.PbLogo);
             this.FpMain.Controls.Add(this.PbPhoto);
@@ -127,6 +127,6 @@
         private System.Windows.Forms.Label LbMotto;
         private System.Windows.Forms.Label LbTitle;
         private System.Windows.Forms.Timer TmRolling;
-        private Y.Controls.Container.FlexiblePanel FpMain;
+        private Y.Skin.YoPanel.FlexiblePanel FpMain;
     }
 }
