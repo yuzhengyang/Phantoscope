@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<MainForm>
-  <FpMain>
-    <PbLogo Top="8" Left="7" Width="221" Height="94" />
-    <LbTitle Top="36" Left="406" Width="283" Height="30" />
-    <PbPhoto Top="116" Left="86" Width="495" Height="417" />
-    <LbMotto Top="138" Left="593" Width="378" Height="368" />
-  </FpMain>
-</MainForm>

@@ -1,29 +1,22 @@
-﻿using Phantoscope.Commons;
+﻿using Azylee.Core.DataUtils.CollectionUtils;
+using Azylee.Core.IOUtils.FileUtils;
+using Phantoscope.Commons;
+using Phantoscope.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using Y.Utils.DataUtils.Collections;
-using Y.Utils.IOUtils.FileUtils;
-using Y.Utils.IOUtils.ImageUtils;
-using Y.Utils.IOUtils.PathUtils;
-using Y.Utils.IOUtils.TxtUtils;
 
 namespace Phantoscope.Views
 {
     public partial class MainForm : Form
     {
-        List<string> Photos;
-        int Index = 0;
-        Dictionary<string, Image> PhotosCache = new Dictionary<string, Image>();
-        Dictionary<string, string> MottosCache = new Dictionary<string, string>();
         string Cmd = "";
-        bool CanRemove = false;
+        int CurrentUserIndex = -1;
+        List<UserModel> UserList = new List<UserModel>();
+
+        #region 初始化
         public MainForm()
         {
             SetStyle(ControlStyles.UserPaint, true);
@@ -31,41 +24,33 @@ namespace Phantoscope.Views
             SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲  
             InitializeComponent();
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             P.Init();
             //FpMain.InitMouseAndContolStyle(R.Files.Layout);
 
-            Height = R.FormSize.MainFormHeight;
-            Width = R.FormSize.MainFormWidth;
-            Left = (Screen.PrimaryScreen.WorkingArea.Width - Width) / 2;
-            Top = (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2;
-            TmRolling.Interval = R.Interval.Rolling;
+            WindowState = FormWindowState.Maximized;
 
-            Text = R.Strings.FormName + "      developer：inc@live.cn";
-            LbTitle.Text = R.Strings.Title;
+            Text = R.Strings.FormName + "      :yuzhengyang";
+            //LbTitle.Text = R.Strings.Title;
 
-            LbMotto.ForeColor = ColorTranslator.FromHtml(R.Color.MottoText);
-            LbMotto.Font = new Font(R.FontStyle.Motto, R.FontSize.Motto);
-            LbTitle.ForeColor = ColorTranslator.FromHtml(R.Color.TitleText);
-            LbTitle.Font = new Font(R.FontStyle.Title, R.FontSize.Title);
+            //LbTitle.ForeColor = ColorTranslator.FromHtml(R.Color.TitleText);
+            //LbTitle.Font = new Font(R.FontStyle.Title, R.FontSize.Title);
 
-            if (File.Exists(R.AppPath + @"\Images\Logo.jpg"))
-                PbLogo.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Logo.jpg");
+            //if (File.Exists(R.AppPath + @"\Images\Logo" + R.Files.ImgExt))
+            //PbLogo.BackgroundImage = Image.FromFile(R.Files.Logo);
 
-            if (File.Exists(R.AppPath + @"\Images\Photo.jpg"))
-                PbPhoto.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Photo.jpg");
+            if (File.Exists(R.AppPath + @"\Images\Background" + R.Files.ImgExt))
+                BackgroundImage = Image.FromFile(R.Files.Background);
 
-            if (File.Exists(R.AppPath + @"\Images\Background.jpg"))
-                BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Background.jpg");
-
-            Photos = FileTool.GetFile(R.Paths.Box, "*.jpg");
-            InitPhotos();
+            UserList = GetUsers();
         }
+        #endregion
+
+        #region 滚动照片
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (ListTool.HasElements(Photos))
+            if (Ls.Ok(UserList))
             {
                 if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
                 {
@@ -100,21 +85,17 @@ namespace Phantoscope.Views
         }
         private void TmRolling_Tick(object sender, EventArgs e)
         {
-            if (Index++ < Photos.Count - 1)
+            if (Ls.Ok(UserList))
             {
-                ChangePhoto();
-            }
-            else
-            {
-                Index = 0;
-                ChangePhoto();
+                int index = R.Random.Next(UserList.Count);
+                if (index == CurrentUserIndex) index = R.Random.Next(UserList.Count);
+
+                CurrentUserIndex = index;
+                PbPhoto.BackgroundImage = UserList[CurrentUserIndex].Photo;
             }
         }
-        private void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormWidth", Width.ToString());
-            IniTool.WriteValue(R.Files.SettingsFile, "FormSize", "MainFormHeight", Height.ToString());
-        }
+        #endregion
+
         private void PbPhoto_DoubleClick(object sender, EventArgs e)
         {
             RemovePhoto();
@@ -124,7 +105,7 @@ namespace Phantoscope.Views
         {
             if (Cmd.Contains("JINGPING"))
             {
-                Photos = FileTool.GetFile(R.Paths.Box, "*.jpg");
+                //Photos = FileTool.GetFile(R.Paths.Box, "*" + R.Files.ImgExt);
                 Cmd = "";
             }
             else if (Cmd.Contains("DEL"))
@@ -133,66 +114,71 @@ namespace Phantoscope.Views
                 Cmd = "";
             }
         }
-        private void ChangePhoto()
-        {
-            CanRemove = true;
-            PbPhoto.BackgroundImage = GetPhoto(Photos[Index]);
-            string mottoFile = Photos[Index].ToLower().Replace(".jpg", ".txt");
-            if (File.Exists(mottoFile))
-            {
-                string mottoText = GetMotto(mottoFile);
-                LbMotto.Text = mottoText;
-            }
-            else
-            {
-                LbMotto.Text = "";
-            }
-        }
         private void RemovePhoto()
         {
-            if (Index >= 0 && Index < Photos.Count && Photos.Count > 1 && CanRemove && !TmRolling.Enabled)
+            if (CurrentUserIndex >= 0 && UserList.Count > 1)
             {
-                CanRemove = false;
-                Photos.RemoveAt(Index);
-                LbMotto.Text = "";
-                if (File.Exists(R.AppPath + @"\Images\Photo.jpg"))
-                    PbPhoto.BackgroundImage = Image.FromFile(R.AppPath + @"\Images\Photo.jpg");
+                UserList.RemoveAt(CurrentUserIndex);
+                PbPhoto.Image = null;
             }
         }
-        private Image GetPhoto(string key)
+        #region 获取资源信息（图片和个性签名）
+        private List<UserModel> GetUsers()
         {
-            if (!PhotosCache.ContainsKey(key))
+            List<UserModel> users = new List<UserModel>();
+            List<string> imgs = FileTool.GetFile(R.Paths.Box, "*" + R.Files.ImgExt);
+            if (Ls.Ok(imgs))
             {
-                if (File.Exists(R.Paths.BoxThumbnail + Path.GetFileName(key)))
+                foreach (var img in imgs)
                 {
-                    PhotosCache.Add(key, Image.FromFile(R.Paths.BoxThumbnail + Path.GetFileName(key)));
-                }
-                else
-                {
-                    PhotosCache.Add(key, Image.FromFile(key));
+                    UserModel user = new UserModel();
+                    user.Name = Path.GetFileNameWithoutExtension(img);
+                    user.ImgFile = img;
+                    user.Photo = Image.FromFile(img);
+                    users.Add(user);
                 }
             }
-            return PhotosCache[key];
+            return users;
         }
-        private string GetMotto(string key)
+        #endregion
+
+        #region 获取
+        //创建位图
+        Bitmap bmp = new Bitmap(600, 600);//位图大小600*600
+        //创建位图的Graphics对象
+        Graphics gr1 = Graphics.FromImage(bmp);
+        //将位图清黑
+        gr1.Clear(Color.Black);
+
+        //在位图上画出要画的东西
+        if (myBall != null)
         {
-            if (!MottosCache.ContainsKey(key))
-            {
-                MottosCache.Add(key, TxtTool.Read(key));
-            }
-            return MottosCache[key];
+            myBall.Show(gr1);
         }
-        private void InitPhotos()
+        for (int i = 0; i<bullnum; i++)
         {
-            DirTool.Create(R.Paths.BoxThumbnail);
-            Photos?.ForEach(x =>
-            {
-                bool flag = ImageHelper.MakeThumbnail(x, R.Paths.BoxThumbnail + Path.GetFileName(x), 1000, 1000, "W");
-                if (flag)
-                {
-                    PhotosCache.Add(x, Image.FromFile(R.Paths.BoxThumbnail + Path.GetFileName(x)));
-                }
-            });
+            if (bull[i] != null) bull[i].Show(gr1);
+}
+        if (a != null)
+        {
+            a.Show(gr1);
         }
+        //创建Picshow的Graphics对象
+        Graphics gr2 = PicShow.CreateGraphics();
+//将bmp画到picshow上
+gr2.DrawImage(bmp, 0, 0);
+        //释放内存！！这一步必须要，不然内存会爆炸的
+        bmp.Dispose();
+        bmp = null;
+        gr1.Dispose();
+        gr1 = null;
+        gr2.Dispose();
+        gr2 = null;
+--------------------- 
+作者：Fanstorm丶
+来源：CSDN
+原文：https://blog.csdn.net/wf824284257/article/details/53888611 
+版权声明：本文为博主原创文章，转载请附上博文链接！
+        #endregion
     }
 }
