@@ -141,44 +141,5 @@ namespace Phantoscope.Views
             return users;
         }
         #endregion
-
-        #region 获取
-        //创建位图
-        Bitmap bmp = new Bitmap(600, 600);//位图大小600*600
-        //创建位图的Graphics对象
-        Graphics gr1 = Graphics.FromImage(bmp);
-        //将位图清黑
-        gr1.Clear(Color.Black);
-
-        //在位图上画出要画的东西
-        if (myBall != null)
-        {
-            myBall.Show(gr1);
-        }
-        for (int i = 0; i<bullnum; i++)
-        {
-            if (bull[i] != null) bull[i].Show(gr1);
-}
-        if (a != null)
-        {
-            a.Show(gr1);
-        }
-        //创建Picshow的Graphics对象
-        Graphics gr2 = PicShow.CreateGraphics();
-//将bmp画到picshow上
-gr2.DrawImage(bmp, 0, 0);
-        //释放内存！！这一步必须要，不然内存会爆炸的
-        bmp.Dispose();
-        bmp = null;
-        gr1.Dispose();
-        gr1 = null;
-        gr2.Dispose();
-        gr2 = null;
---------------------- 
-作者：Fanstorm丶
-来源：CSDN
-原文：https://blog.csdn.net/wf824284257/article/details/53888611 
-版权声明：本文为博主原创文章，转载请附上博文链接！
-        #endregion
     }
 }
